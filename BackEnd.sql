@@ -7,7 +7,7 @@ USE KidsChurchManagementSystem;
 GO
 
 -- User table (base table for all user types)
-CREATE TABLE [User] (
+CREATE TABLE [Users] (
     User_ID INT IDENTITY(1,1) PRIMARY KEY,
     Username NVARCHAR(50) NOT NULL UNIQUE,
     Password_Hash NVARCHAR(128) NOT NULL,
@@ -35,7 +35,7 @@ CREATE TABLE Parent_Child (
     Child_ID INT,
     Relationship NVARCHAR(50),
     CONSTRAINT PK_Parent_Child PRIMARY KEY (User_ID, Child_ID),
-    CONSTRAINT FK_Parent_Child_User FOREIGN KEY (User_ID) REFERENCES [User](User_ID),
+    CONSTRAINT FK_Parent_Child_User FOREIGN KEY (User_ID) REFERENCES [Users](User_ID),
     CONSTRAINT FK_Parent_Child_Child FOREIGN KEY (Child_ID) REFERENCES Child(Child_ID)
 );
 
@@ -53,7 +53,7 @@ CREATE TABLE Teacher_Class (
     Class_ID INT,
     Assignment_Date DATE NOT NULL,
     CONSTRAINT PK_Teacher_Class PRIMARY KEY (User_ID, Class_ID),
-    CONSTRAINT FK_Teacher_Class_User FOREIGN KEY (User_ID) REFERENCES [User](User_ID),
+    CONSTRAINT FK_Teacher_Class_User FOREIGN KEY (User_ID) REFERENCES [Users](User_ID),
     CONSTRAINT FK_Teacher_Class_Class FOREIGN KEY (Class_ID) REFERENCES Class(Class_ID)
 );
 
@@ -63,7 +63,7 @@ CREATE TABLE Administrator (
     User_ID INT NOT NULL,
     Admin_Level NVARCHAR(20) NOT NULL,
     Date_Appointed DATE NOT NULL CONSTRAINT DF_Admin_Date_Appointed DEFAULT GETDATE(),
-    CONSTRAINT FK_Administrator_User FOREIGN KEY (User_ID) REFERENCES [User](User_ID)
+    CONSTRAINT FK_Administrator_User FOREIGN KEY (User_ID) REFERENCES [Users](User_ID)
 );
 
 -- Check_In_Out table
@@ -78,9 +78,9 @@ CREATE TABLE Check_In_Out (
     Scanned_QR_Code NVARCHAR(100),
     CONSTRAINT CK_Check_Type CHECK (Check_Type IN ('IN', 'OUT')),
     CONSTRAINT FK_Check_Child FOREIGN KEY (Child_ID) REFERENCES Child(Child_ID),
-    CONSTRAINT FK_Check_Parent FOREIGN KEY (Parent_User_ID) REFERENCES [User](User_ID),
+    CONSTRAINT FK_Check_Parent FOREIGN KEY (Parent_User_ID) REFERENCES [Users](User_ID),
     CONSTRAINT FK_Check_Class FOREIGN KEY (Class_ID) REFERENCES Class(Class_ID),
-    CONSTRAINT FK_Check_Security FOREIGN KEY (Security_User_ID) REFERENCES [User](User_ID)
+    CONSTRAINT FK_Check_Security FOREIGN KEY (Security_User_ID) REFERENCES [Users](User_ID)
 );
 
 -- QR_Code table
